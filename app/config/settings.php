@@ -15,16 +15,4 @@ return [
         $pdo = DatabaseConnection::getConnection('toubiprat');
         return new PDOPraticienRepository($pdo);
     },
-
-    // Service métier
-    ServicePraticienInterface::class => function (Container $container) {
-        $repository = $container->get(PraticienRepositoryInterface::class);
-        return new ServicePraticien($repository);
-    },
-
-    // Actions
-    ListePraticiensAction::class => function (Container $container) {
-        $service = $container->get(ServicePraticienInterface::class);
-        return new ListePraticiensAction($service);
-    }
 ];
