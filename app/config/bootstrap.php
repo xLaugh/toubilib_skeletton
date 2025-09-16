@@ -9,6 +9,7 @@ if (file_exists(__DIR__ . '/.env')) {
 }
 
 $containerBuilder = new ContainerBuilder();
+$containerBuilder->useAutowiring(false);
 $containerBuilder->addDefinitions(require __DIR__ . '/settings.php');
 
 $container = $containerBuilder->build();
