@@ -11,8 +11,7 @@ use toubilib\infra\repositories\PDOPraticienRepository;
 return [
     // Configuration des bases de données
     PraticienRepositoryInterface::class => function () {
-        $dbConfig = require __DIR__ . '/database.php';
-        DatabaseConnection::init($dbConfig);
+        // Construit la connexion depuis les variables d'environnement (.env / env conteneur)
         $pdo = DatabaseConnection::getConnection('toubiprat');
         return new PDOPraticienRepository($pdo);
     },
