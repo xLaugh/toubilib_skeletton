@@ -4,6 +4,7 @@ namespace toubilib\core\application\usecases;
 
 use toubilib\core\application\ports\api\RdvDTO;
 use toubilib\core\application\ports\api\ServiceRdvInterface;
+use toubilib\core\application\ports\api\RdvSlotDTO;
 use toubilib\core\application\ports\spi\repositoryInterfaces\RdvRepositoryInterface;
 
 class ServiceRdv implements ServiceRdvInterface
@@ -53,5 +54,16 @@ class ServiceRdv implements ServiceRdvInterface
             date_creation: $rdv->getDateCreation(),
             motif_visite: $rdv->getMotifVisite()
         );
+    }
+
+    public function listerCreneauxOccupes(string $praticienId, string $dateDebut, string $dateFin): array
+    {
+        $rdvs = $this->rdvRepository->findByPraticienAndPeriod($praticienId, $dateDebut, $dateFin);
+        return array_map(function ($rdv) {
+            return new RdvSlotDTO(
+                date_heure_debut: $rdv->getDateHeureDebut(),
+                date_heure_fin: $rdv->getDateHeureFin()
+            );
+        }, $rdvs);
     }
 }

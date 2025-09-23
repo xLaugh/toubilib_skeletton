@@ -20,4 +20,5 @@ interface RdvRepositoryInterface {
      * @return Rdv|null
      */
     public function findById(string $id): ?Rdv;
+    public function findByPraticienAndPeriod(string $praticienId, string $dateDebut, string $dateFin): array;
 }

@@ -6,6 +6,7 @@ use Psr\Http\Message\ResponseInterface as Response;
 use toubilib\api\actions\DetailPraticienAction;
 use toubilib\api\actions\GetRdvById;
 use toubilib\api\actions\ListePraticiensAction;
+use toubilib\api\actions\ListerCreneauxOccupesAction;
 
 return function( \Slim\App $app):\Slim\App {
 
@@ -17,6 +18,9 @@ return function( \Slim\App $app):\Slim\App {
 
     // Route pour obtenir les détails d'un praticien par son ID
     $app->get('/praticiens/{id}', DetailPraticienAction::class);
+
+    // Route pour lister les créneaux occupés d'un praticien sur une période
+    $app->get('/praticiens/{id}/rdv/occupes', ListerCreneauxOccupesAction::class);
 
     return $app;
 };
