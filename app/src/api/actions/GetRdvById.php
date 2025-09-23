@@ -9,7 +9,7 @@ use toubilib\core\application\ports\api\ServiceRdvInterface;
 class GetRdvById
 {
     public function __construct(
-        private ServiceRdvInterface $serviceRdv
+        private readonly ServiceRdvInterface $serviceRdv
     ) {}
 
     public function __invoke(Request $request, Response $response, array $args): Response

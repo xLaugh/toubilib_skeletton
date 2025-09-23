@@ -7,22 +7,50 @@ use toubilib\api\actions\ListePraticiensAction;
 use toubilib\api\actions\ListerCreneauxOccupesAction;
 use toubilib\core\application\ports\api\ServicePraticienInterface;
 use toubilib\core\application\ports\api\ServiceRdvInterface;
+use toubilib\core\application\ports\spi\repositoryInterfaces\PraticienRepositoryInterface;
+use toubilib\core\application\ports\spi\repositoryInterfaces\RdvRepositoryInterface;
+use toubilib\core\application\usecases\ServicePraticien;
+use toubilib\core\application\usecases\ServiceRdv;
 
 return [
-    ListePraticiensAction::class => function (Container $container) {
-        $service = $container->get(ServicePraticienInterface::class);
-        return new ListePraticiensAction($service);
+
+    // Service métier pour les praticiens
+    ServicePraticienInterface::class => function ($c) {
+        $repo = $c->get(PraticienRepositoryInterface::class);
+        return new ServicePraticien($repo);
     },
-    GetRdvById::class => function (Container $container){
-        $service = $container->get(ServiceRdvInterface::class);
-        return new GetRdvById($service);
+
+    // Service métier pour les rendez-vous
+    ServiceRdvInterface::class => function ($c) {
+        $repo = $c->get(RdvRepositoryInterface::class);
+        return new ServiceRdv($repo);
     },
-    DetailPraticienAction::class => function (Container $container){
-        $service = $container->get(ServicePraticienInterface::class);
-        return new DetailPraticienAction($service);
+
+    // Liste des praticiens
+    ListePraticiensAction::class => function ($c) {
+        return new ListePraticiensAction(
+            $c->get(ServicePraticienInterface::class)
+        );
     },
-    ListerCreneauxOccupesAction::class => function (Container $container){
-        $service = $container->get(ServiceRdvInterface::class);
-        return new ListerCreneauxOccupesAction($service);
+
+    // Détail d’un praticien
+    DetailPraticienAction::class => function ($c) {
+        return new DetailPraticienAction(
+            $c->get(ServicePraticienInterface::class)
+        );
+    },
+
+    // Rendez-vous par ID
+    GetRdvById::class => function ($c) {
+        return new GetRdvById(
+            $c->get(ServiceRdvInterface::class)
+        );
+    },
+
+    // Créneaux occupés
+    ListerCreneauxOccupesAction::class => function ($c) {
+        return new ListerCreneauxOccupesAction(
+            $c->get(ServiceRdvInterface::class)
+        );
     }
 ];
