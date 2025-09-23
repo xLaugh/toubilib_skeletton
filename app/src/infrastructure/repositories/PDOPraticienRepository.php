@@ -2,6 +2,8 @@
 
 namespace toubilib\infra\repositories;
 
+use PDO;
+use toubilib\core\application\ports\api\PraticienDetailDTO;
 use toubilib\core\application\ports\spi\repositoryInterfaces\PraticienRepositoryInterface;
 use toubilib\core\domain\entities\praticien\Praticien;
 use Ramsey\Uuid\Uuid;
@@ -108,4 +110,56 @@ class PDOPraticienRepository implements PraticienRepositoryInterface
             titre: $row['titre']
         );
     }
+
+    public function findDetailById(string $id): PraticienDetailDTO
+    {
+        $sql = "
+        SELECT p.*, s.libelle AS specialite_libelle, st.nom AS structure_nom, st.code_postal
+        FROM praticien p
+        JOIN specialite s ON p.specialite_id = s.id
+        LEFT JOIN structure st ON p.structure_id = st.id
+        WHERE p.id = :id
+    ";
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute(['id' => $id]);
+        $row = $stmt->fetch(PDO::FETCH_ASSOC);
+        if (!$row) {
+            throw new \Exception("Praticien with ID $id not found.");
+        }
+
+        // Motifs
+        $motifs = $this->pdo->prepare("
+        SELECT m.libelle
+        FROM praticien2motif pm
+        JOIN motif_visite m ON pm.motif_id = m.id
+        WHERE pm.praticien_id = :id
+    ");
+        $motifs->execute(['id' => $id]);
+        $motifsList = array_column($motifs->fetchAll(PDO::FETCH_ASSOC), 'libelle');
+
+        // Moyens de paiement
+        $moyens = $this->pdo->prepare("
+        SELECT mp.libelle
+        FROM praticien2moyen pm
+        JOIN moyen_paiement mp ON pm.moyen_id = mp.id
+        WHERE pm.praticien_id = :id
+    ");
+        $moyens->execute(['id' => $id]);
+        $moyensList = array_column($moyens->fetchAll(PDO::FETCH_ASSOC), 'libelle');
+
+        return new PraticienDetailDTO(
+            id: $row['id'],
+            nom: $row['nom'],
+            prenom: $row['prenom'],
+            specialite: $row['specialite_libelle'],
+            email: $row['email'],
+            telephone: $row['telephone'],
+            ville: $row['ville'],
+            codePostal: $row['code_postal'] ?? null,
+            structure: $row['structure_nom'] ?? null,
+            motifs: $motifsList,
+            moyensPaiement: $moyensList
+        );
+    }
+
 }

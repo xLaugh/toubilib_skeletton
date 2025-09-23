@@ -2,6 +2,7 @@
 
 namespace toubilib\core\application\ports\spi\repositoryInterfaces;
 
+use toubilib\core\application\ports\api\PraticienDetailDTO;
 use toubilib\core\domain\entities\praticien\Praticien;
 
 interface PraticienRepositoryInterface
@@ -20,4 +21,6 @@ interface PraticienRepositoryInterface
      * @return Praticien|null
      */
     public function findById(string $id): ?Praticien;
+    public function findDetailById(string $id): PraticienDetailDTO;
+
 }

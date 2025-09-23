@@ -1,6 +1,7 @@
 <?php
 
 use DI\Container;
+use toubilib\api\actions\DetailPraticienAction;
 use toubilib\api\actions\GetRdvById;
 use toubilib\api\actions\ListePraticiensAction;
 use toubilib\core\application\ports\api\ServicePraticienInterface;
@@ -14,5 +15,9 @@ return [
     GetRdvById::class => function (Container $container){
         $service = $container->get(ServiceRdvInterface::class);
         return new GetRdvById($service);
+    },
+    DetailPraticienAction::class => function (Container $container){
+        $service = $container->get(ServicePraticienInterface::class);
+        return new DetailPraticienAction($service);
     }
 ];

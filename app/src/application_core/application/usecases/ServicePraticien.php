@@ -2,6 +2,7 @@
 
 namespace toubilib\core\application\usecases;
 
+use toubilib\core\application\ports\api\PraticienDetailDTO;
 use toubilib\core\application\ports\api\PraticienDTO;
 use toubilib\core\application\ports\api\ServicePraticienInterface;
 use toubilib\core\application\ports\spi\repositoryInterfaces\PraticienRepositoryInterface;
@@ -30,4 +31,10 @@ class ServicePraticien implements ServicePraticienInterface
             );
         }, $praticiens);
     }
+
+    public function getPraticienDetail(string $id): ?PraticienDetailDTO
+    {
+        return $this->praticienRepository->findDetailById($id);
+    }
+
 }
