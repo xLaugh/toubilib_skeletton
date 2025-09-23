@@ -14,6 +14,8 @@ return function( \Slim\App $app):\Slim\App {
 
     //Route pour liser le rdv correspondant à l'id rentré
     $app->get('/rdv/{id}', GetRdvById::class);
+
+    // Route pour obtenir les détails d'un praticien par son ID
     $app->get('/praticiens/{id}', DetailPraticienAction::class);
 
     return $app;

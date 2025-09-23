@@ -1,8 +1,15 @@
 <?php
 namespace toubilib\core\application\ports\api;
 
-interface ServiceRdvInterface
-{
+interface ServiceRdvInterface {
+
+    /**
+     * @return RdvDTO[]
+     */
     public function listerRdv(): array;
+
+    /**
+     * @return RdvDTO|null
+     */
     public function chercherParId(string $id): ?RdvDTO;
 }

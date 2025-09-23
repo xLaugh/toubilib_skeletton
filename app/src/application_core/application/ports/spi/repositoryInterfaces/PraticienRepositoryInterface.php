@@ -21,6 +21,13 @@ interface PraticienRepositoryInterface
      * @return Praticien|null
      */
     public function findById(string $id): ?Praticien;
+
+    /**
+     * Retourne les détails d'un praticien par son ID
+     *
+     * @param string $id
+     * @return PraticienDetailDTO
+     */
     public function findDetailById(string $id): PraticienDetailDTO;
 
 }

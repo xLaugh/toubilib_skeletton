@@ -10,6 +10,13 @@ interface ServicePraticienInterface
      * @return PraticienDTO[]
      */
     public function listerPraticiens(): array;
+
+    /**
+     * Retourne les détails d'un praticien par son ID
+     *
+     * @param string $id
+     * @return PraticienDetailDTO|null
+     */
     public function getPraticienDetail(string $id): ?PraticienDetailDTO;
 
 }
