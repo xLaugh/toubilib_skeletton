@@ -3,6 +3,7 @@
 namespace toubilib\core\application\ports\spi\repositoryInterfaces;
 
 
+use toubilib\core\application\ports\api\InputRendezVousDTO;
 use toubilib\core\domain\entities\Rdv;
 
 interface RdvRepositoryInterface {
@@ -21,4 +22,5 @@ interface RdvRepositoryInterface {
      */
     public function findById(string $id): ?Rdv;
     public function findByPraticienAndPeriod(string $praticienId, string $dateDebut, string $dateFin): array;
+    public function save(Rdv $rdv): void;
 }

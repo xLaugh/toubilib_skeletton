@@ -13,4 +13,5 @@ interface ServiceRdvInterface {
      */
     public function chercherParId(string $id): ?RdvDTO;
     public function listerCreneauxOccupes(string $praticienId, string $dateDebut, string $dateFin): array;
+    public function creerRendezVous(InputRendezVousDTO $dto): void;
 }

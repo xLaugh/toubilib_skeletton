@@ -102,4 +102,27 @@ class PDORdvRepository implements RdvRepositoryInterface
 
         return $rdvs;
     }
+
+    public function save(Rdv $rdv): void
+    {
+        $sql = "INSERT INTO rdv(id, praticien_id, patient_id,date_heure_debut, duree, date_creation, motif_visite)
+                VALUES( 
+                    :id, 
+                    :pratiId, 
+                    :patId, 
+                    :dateDebut, 
+                    :duree, 
+                    :dateCrea, 
+                    :motif
+                    )";
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->bindValue(':id', $rdv->getId());
+        $stmt->bindValue(':pratiId', $rdv->getPraticienId());
+        $stmt->bindValue(':patId', $rdv->getPatientId());
+        $stmt->bindValue(':dateDebut', $rdv->getDateHeureDebut());
+        $stmt->bindValue(':duree', $rdv->getDuree());
+        $stmt->bindValue(':dateCrea', date("Y-m-d H:i:s"));
+        $stmt->bindValue(':motif', $rdv->getMotifVisite());
+        $stmt->execute();
+    }
 }
