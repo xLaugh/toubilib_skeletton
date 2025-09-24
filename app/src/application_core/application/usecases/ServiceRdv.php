@@ -7,6 +7,7 @@ use toubilib\core\application\ports\api\InputRendezVousDTO;
 use toubilib\core\application\ports\api\RdvDTO;
 use toubilib\core\application\ports\api\ServiceRdvInterface;
 use toubilib\core\application\ports\api\RdvSlotDTO;
+use toubilib\core\domain\entities\Rdv as RdvEntity;
 use toubilib\core\application\ports\spi\repositoryInterfaces\PraticienRepositoryInterface;
 use toubilib\core\application\ports\spi\repositoryInterfaces\RdvRepositoryInterface;
 use toubilib\core\domain\entities\Rdv;
@@ -113,5 +114,30 @@ class ServiceRdv implements ServiceRdvInterface
         );
 
         $this->rdvRepository->save($rdv);
+    }
+
+    public function agendaPraticien(string $praticienId, ?string $dateDebut = null, ?string $dateFin = null): array
+    {
+        if ($dateDebut === null || $dateFin === null) {
+            $today = new \DateTimeImmutable('today');
+            $start = $today->format('Y-m-d') . ' 00:00:00';
+            $end = $today->format('Y-m-d') . ' 23:59:59';
+            $dateDebut = $dateDebut ?? $start;
+            $dateFin = $dateFin ?? $end;
+        }
+        $rdvs = $this->rdvRepository->findByPraticienAndPeriod($praticienId, $dateDebut, $dateFin);
+        return array_map(function ($rdv) {
+            return new RdvDTO(
+                id: $rdv->getId(),
+                praticien_id: $rdv->getPraticienId(),
+                patient_id: $rdv->getPatientId(),
+                date_heure_debut: $rdv->getDateHeureDebut(),
+                status: $rdv->getStatus(),
+                duree: $rdv->getDuree(),
+                date_heure_fin: $rdv->getDateHeureFin(),
+                date_creation: $rdv->getDateCreation(),
+                motif_visite: $rdv->getMotifVisite()
+            );
+        }, $rdvs);
     }
 }
