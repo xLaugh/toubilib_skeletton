@@ -6,6 +6,7 @@ use toubilib\api\actions\GetRdvById;
 use toubilib\api\actions\ListePraticiensAction;
 use toubilib\api\actions\ListerCreneauxOccupesAction;
 use toubilib\api\actions\AgendaPraticienAction;
+use toubilib\api\actions\AnnulerRDVAction;
 use toubilib\core\application\ports\api\ServicePraticienInterface;
 use toubilib\core\application\ports\api\ServiceRdvInterface;
 use toubilib\core\application\ports\spi\repositoryInterfaces\PraticienRepositoryInterface;
@@ -57,6 +58,12 @@ return [
     // Agenda praticien
     AgendaPraticienAction::class => function ($c) {
         return new AgendaPraticienAction(
+            $c->get(ServiceRdvInterface::class)
+        );
+    },
+    // Annuler un RDV
+    AnnulerRDVAction::class => function ($c) {
+        return new AnnulerRDVAction(
             $c->get(ServiceRdvInterface::class)
         );
     }
