@@ -41,7 +41,7 @@ return [
 
     $dsn = "pgsql:host={$config['host']};port={$config['port']};dbname={$config['dbname']}";
     return new PDO($dsn, $config['user'], $config['password'], $options);
-},
+    },
 
     // Connexion toubirdv
     'db.toubirdv' => function (ContainerInterface $c): PDO {
@@ -50,17 +50,17 @@ return [
 
     $dsn = "pgsql:host={$config['host']};port={$config['port']};dbname={$config['dbname']}";
     return new PDO($dsn, $config['user'], $config['password'], $options);
-},
+    },
 
     // Repository Praticien
     PraticienRepositoryInterface::class => function (ContainerInterface $c) {
     return new PDOPraticienRepository($c->get('db.toubiprat'));
-},
+    },
 
     // Repository Rdv
     RdvRepositoryInterface::class => function (ContainerInterface $c) {
     return new PDORdvRepository($c->get('db.toubirdv'));
-},
+    },
 ];
 
 
