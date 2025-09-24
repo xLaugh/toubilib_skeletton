@@ -3,6 +3,9 @@
 namespace toubilib\core\domain\entities;
 class Rdv{
 
+    public const STATUS_PREVU = 0;
+    public const STATUS_ANNULE = 2;
+
     private string $id;
     private string $praticien_id;
     private string $patient_id;
@@ -79,6 +82,19 @@ class Rdv{
     public function getMotifVisite(): string
     {
         return $this->motif_visite;
+    }
+
+    public function annuler(): void
+    {
+        if ($this->status === self::STATUS_ANNULE) {
+            throw new \RuntimeException('rdv_deja_annule');
+        }
+        $now = new \DateTimeImmutable('now');
+        $start = new \DateTimeImmutable($this->date_heure_debut);
+        if ($start <= $now) {
+            throw new \RuntimeException('rdv_non_annulable');
+        }
+        $this->status = self::STATUS_ANNULE;
     }
 
 }
