@@ -19,11 +19,11 @@ class ValidateRDVMiddleware
         try {
             v::key('praticien_id', v::stringType()->notEmpty())
                 ->key('patient_id', v::stringType()->notEmpty())
-                ->key('date_heure_debut', v::stringType()->notEmpty()->date('Y-m-d H:i:s'))
+                ->key('date_heure_debut', v::dateTime('Y-m-d H:i:s'))
                 ->key('duree', v::intType()->positive())
                 ->key('motif_visite', v::stringType()->notEmpty())
-                ->key('date_heure_fin', v::optional(v::stringType()->date('Y-m-d H:i:s')))
-                ->key('date_creation', v::optional(v::stringType()->date('Y-m-d H:i:s')))
+                ->key('date_heure_fin', v::optional(v::dateTime('Y-m-d H:i:s')))
+                ->key('date_creation', v::optional(v::dateTime('Y-m-d H:i:s')))
                 ->assert($data);
         } catch (NestedValidationException $e) {
             throw new HttpBadRequestException($rq, "Invalid data: " . $e->getFullMessage(), $e);
