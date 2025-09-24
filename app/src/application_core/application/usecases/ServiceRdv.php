@@ -116,6 +116,27 @@ class ServiceRdv implements ServiceRdvInterface
         $this->rdvRepository->save($rdv);
     }
 
+    public function annulerRendezVous(string $id): RdvDTO
+    {
+        $rdv = $this->rdvRepository->findById($id);
+        if ($rdv === null) {
+            throw new \DomainException('rdv_introuvable');
+        }
+        $rdv->annuler();
+        $this->rdvRepository->updateStatus($rdv->getId(), $rdv->getStatus());
+        return new RdvDTO(
+            id: $rdv->getId(),
+            praticien_id: $rdv->getPraticienId(),
+            patient_id: $rdv->getPatientId(),
+            date_heure_debut: $rdv->getDateHeureDebut(),
+            status: $rdv->getStatus(),
+            duree: $rdv->getDuree(),
+            date_heure_fin: $rdv->getDateHeureFin(),
+            date_creation: $rdv->getDateCreation(),
+            motif_visite: $rdv->getMotifVisite()
+        );
+    }
+
     public function agendaPraticien(string $praticienId, ?string $dateDebut = null, ?string $dateFin = null): array
     {
         if ($dateDebut === null || $dateFin === null) {

@@ -8,6 +8,7 @@ use toubilib\api\actions\GetRdvById;
 use toubilib\api\actions\ListePraticiensAction;
 use toubilib\api\actions\ListerCreneauxOccupesAction;
 use toubilib\api\actions\AgendaPraticienAction;
+use toubilib\api\actions\AnnulerRDVAction;
 
 return function( \Slim\App $app):\Slim\App {
 
@@ -25,6 +26,9 @@ return function( \Slim\App $app):\Slim\App {
 
     // Agenda praticien
     $app->get('/praticiens/{id}/agenda', AgendaPraticienAction::class);
+
+    // Annulation de rendez-vous
+    $app->post('/rdv/{id}/annuler', AnnulerRDVAction::class);
 
     return $app;
 };
