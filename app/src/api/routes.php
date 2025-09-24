@@ -7,6 +7,7 @@ use toubilib\api\actions\DetailPraticienAction;
 use toubilib\api\actions\GetRdvById;
 use toubilib\api\actions\ListePraticiensAction;
 use toubilib\api\actions\ListerCreneauxOccupesAction;
+use toubilib\api\actions\AgendaPraticienAction;
 
 return function( \Slim\App $app):\Slim\App {
 
@@ -21,6 +22,9 @@ return function( \Slim\App $app):\Slim\App {
 
     // Route pour lister les créneaux occupés d'un praticien sur une période
     $app->get('/praticiens/{id}/rdv/occupes', ListerCreneauxOccupesAction::class);
+
+    // Agenda praticien
+    $app->get('/praticiens/{id}/agenda', AgendaPraticienAction::class);
 
     return $app;
 };

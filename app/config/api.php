@@ -5,6 +5,7 @@ use toubilib\api\actions\DetailPraticienAction;
 use toubilib\api\actions\GetRdvById;
 use toubilib\api\actions\ListePraticiensAction;
 use toubilib\api\actions\ListerCreneauxOccupesAction;
+use toubilib\api\actions\AgendaPraticienAction;
 use toubilib\core\application\ports\api\ServicePraticienInterface;
 use toubilib\core\application\ports\api\ServiceRdvInterface;
 use toubilib\core\application\ports\spi\repositoryInterfaces\PraticienRepositoryInterface;
@@ -50,6 +51,12 @@ return [
     // Créneaux occupés
     ListerCreneauxOccupesAction::class => function ($c) {
         return new ListerCreneauxOccupesAction(
+            $c->get(ServiceRdvInterface::class)
+        );
+    },
+    // Agenda praticien
+    AgendaPraticienAction::class => function ($c) {
+        return new AgendaPraticienAction(
             $c->get(ServiceRdvInterface::class)
         );
     }
