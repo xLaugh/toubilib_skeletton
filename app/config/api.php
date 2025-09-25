@@ -2,10 +2,12 @@
 
 use DI\Container;
 use toubilib\api\actions\DetailPraticienAction;
+use toubilib\api\actions\GetPatientById;
 use toubilib\api\actions\GetRdvById;
 use toubilib\api\actions\ListePraticiensAction;
 use toubilib\api\actions\ListerCreneauxOccupesAction;
 use toubilib\api\actions\AgendaPraticienAction;
+use toubilib\core\application\ports\api\ServicePatientInterface;
 use toubilib\core\application\ports\api\ServicePraticienInterface;
 use toubilib\core\application\ports\api\ServiceRdvInterface;
 use toubilib\core\application\ports\spi\repositoryInterfaces\PraticienRepositoryInterface;
@@ -58,6 +60,12 @@ return [
     AgendaPraticienAction::class => function ($c) {
         return new AgendaPraticienAction(
             $c->get(ServiceRdvInterface::class)
+        );
+    },
+    // Patient par ID
+    GetPatientById::class =>function($c) {
+        return new GetPatientById(
+          $c->get(ServicePatientInterface::class)
         );
     }
 ];

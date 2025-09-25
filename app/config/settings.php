@@ -1,11 +1,12 @@
 <?php
 
 use Psr\Container\ContainerInterface;
+use toubilib\core\application\ports\spi\repositoryInterfaces\PatientRepositoryInterface;
 use toubilib\core\application\ports\spi\repositoryInterfaces\PraticienRepositoryInterface;
 use toubilib\core\application\ports\spi\repositoryInterfaces\RdvRepositoryInterface;
+use toubilib\infra\repositories\PDOPatientRepository;
 use toubilib\infra\repositories\PDOPraticienRepository;
 use toubilib\infra\repositories\PDORdvRepository;
-use PDO;
 
 return [
     'db' => [
@@ -24,6 +25,14 @@ return [
             'dbname' => $_ENV['TOUBIRDV_DB_NAME'] ?? 'toubirdv',
             'user' => $_ENV['TOUBIRDV_DB_USER'] ?? 'toubirdv',
             'password' => $_ENV['TOUBIRDV_DB_PASS'] ?? 'toubirdv',
+        ],
+        'toubipat' => [
+            'driver' => 'pgsql',
+            'host' => $_ENV['TOUBIRDV_DB_HOST'] ?? 'toubipat.db',
+            'port' => $_ENV['TOUBIRDV_DB_PORT'] ?? 5432,
+            'dbname' => $_ENV['TOUBIRDV_DB_NAME'] ?? 'toubipat',
+            'user' => $_ENV['TOUBIRDV_DB_USER'] ?? 'toubipat',
+            'password' => $_ENV['TOUBIRDV_DB_PASS'] ?? 'toubipat',
         ],
     ],
 
@@ -52,6 +61,15 @@ return [
     return new PDO($dsn, $config['user'], $config['password'], $options);
 },
 
+    // Connexion toubipat
+    'db.toubipat' => function (ContainerInterface $c): PDO {
+        $config = $c->get('db')['toubipat'];
+        $options = $c->get('pdo_options');
+
+        $dsn = "pgsql:host={$config['host']};port={$config['port']};dbname={$config['dbname']}";
+        return new PDO($dsn, $config['user'], $config['password'], $options);
+        },
+
     // Repository Praticien
     PraticienRepositoryInterface::class => function (ContainerInterface $c) {
     return new PDOPraticienRepository($c->get('db.toubiprat'));
@@ -61,6 +79,11 @@ return [
     RdvRepositoryInterface::class => function (ContainerInterface $c) {
     return new PDORdvRepository($c->get('db.toubirdv'));
 },
+
+    // Repository Rdv
+    PatientRepositoryInterface::class => function (ContainerInterface $c) {
+        return new PDOPatientRepository($c->get('db.toubipat'));
+    },
 ];
 
 

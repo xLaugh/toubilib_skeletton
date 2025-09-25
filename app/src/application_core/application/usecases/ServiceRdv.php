@@ -5,6 +5,8 @@ namespace toubilib\core\application\usecases;
 use Ramsey\Uuid\Uuid;
 use toubilib\core\application\ports\api\InputRendezVousDTO;
 use toubilib\core\application\ports\api\RdvDTO;
+use toubilib\core\application\ports\api\ServicePatientInterface;
+use toubilib\core\application\ports\api\ServicePraticienInterface;
 use toubilib\core\application\ports\api\ServiceRdvInterface;
 use toubilib\core\application\ports\api\RdvSlotDTO;
 use toubilib\core\domain\entities\Rdv as RdvEntity;
@@ -15,11 +17,14 @@ use toubilib\core\domain\entities\Rdv;
 class ServiceRdv implements ServiceRdvInterface
 {
     private RdvRepositoryInterface $rdvRepository;
-    private PraticienRepositoryInterface $praticienRepository;
+    private ServicePraticienInterface $servicePraticien;
+    private ServicePatientInterface $servicePatient;
 
-    public function __construct(RdvRepositoryInterface $rdvRepository)
+    public function __construct(RdvRepositoryInterface $rdvRepository, ServicePatientInterface $servicePatient, ServicePraticienInterface $servicePraticien)
     {
         $this->rdvRepository = $rdvRepository;
+        $this->servicePatient = $servicePatient;
+        $this->servicePraticien = $servicePraticien;
     }
 
     public function listerRdv(): array
@@ -73,14 +78,16 @@ class ServiceRdv implements ServiceRdvInterface
         }, $rdvs);
     }
 
-    public function creerRendezVous(InputRendezVousDTO $dto): void
+    public function creerRendezVous(InputRendezVousDTO $dto): RdvDTO
     {
-        $praticien = $this->praticienRepository->findById($dto->praticien_id);
-        if (!$praticien) {
+        $praticien = $this->servicePraticien->getPraticienDetail($dto->praticien_id);
+        if ($praticien->toArray()->id != NULL) {
             throw new \DomainException("Praticien inexistant");
         }
+        $patient = $this->servicePatient->getPatient($dto->patient_id);
+        if ($patient->toArray()->id != NULL)
 
-        if (!in_array($dto->motif_visite, $praticien->getMotifs())) {
+        if (!in_array($dto->motif_visite, $praticien->motifs)) {
             throw new \DomainException("Motif non autorisé");
         }
 
@@ -114,6 +121,7 @@ class ServiceRdv implements ServiceRdvInterface
         );
 
         $this->rdvRepository->save($rdv);
+        return new RdvDTO($rdv->getId(), $rdv->getPraticienId(), $rdv->getPatientId(), $rdv->getDateHeureDebut(), $rdv->getStatus(), $rdv->getDuree(), $rdv->getDateHeureFin(), $rdv->getDateCreation(), $rdv->getMotifVisite());
     }
 
     public function agendaPraticien(string $praticienId, ?string $dateDebut = null, ?string $dateFin = null): array
