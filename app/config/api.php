@@ -8,6 +8,7 @@ use toubilib\api\actions\ListePraticiensAction;
 use toubilib\api\actions\ListerCreneauxOccupesAction;
 use toubilib\api\actions\AgendaPraticienAction;
 use toubilib\core\application\ports\api\ServicePatientInterface;
+use toubilib\api\actions\AnnulerRDVAction;
 use toubilib\core\application\ports\api\ServicePraticienInterface;
 use toubilib\core\application\ports\api\ServiceRdvInterface;
 use toubilib\core\application\ports\spi\repositoryInterfaces\PraticienRepositoryInterface;
@@ -62,10 +63,16 @@ return [
             $c->get(ServiceRdvInterface::class)
         );
     },
+    // Annuler un RDV
+    AnnulerRDVAction::class => function ($c) {
+        return new AnnulerRDVAction(
+            $c->get(ServiceRdvInterface::class)
+        );
+    },
     // Patient par ID
     GetPatientById::class =>function($c) {
         return new GetPatientById(
           $c->get(ServicePatientInterface::class)
         );
-    }
+    },
 ];
