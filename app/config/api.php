@@ -1,6 +1,7 @@
 <?php
 
 use DI\Container;
+use toubilib\api\actions\CreerRendezVousAction;
 use toubilib\api\actions\DetailPraticienAction;
 use toubilib\api\actions\GetPatientById;
 use toubilib\api\actions\GetRdvById;
@@ -73,6 +74,12 @@ return [
     GetPatientById::class =>function($c) {
         return new GetPatientById(
           $c->get(ServicePatientInterface::class)
+        );
+    },
+    // Ajout d'un Rendez-Vous
+    CreerRendezVousAction::class => function ($c){
+        return new CreerRendezVousAction(
+            $c->get(ServiceRdvInterface::class)
         );
     },
 ];

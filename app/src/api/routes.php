@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Message\ResponseInterface as Response;
+use toubilib\api\actions\CreerRendezVousAction;
 use toubilib\api\actions\DetailPraticienAction;
 use toubilib\api\actions\GetPatientById;
 use toubilib\api\actions\GetRdvById;
@@ -10,6 +11,7 @@ use toubilib\api\actions\ListePraticiensAction;
 use toubilib\api\actions\ListerCreneauxOccupesAction;
 use toubilib\api\actions\AgendaPraticienAction;
 use toubilib\api\actions\AnnulerRDVAction;
+use toubilib\api\middleware\ValidateRDVMiddleware;
 
 return function( \Slim\App $app):\Slim\App {
 
@@ -33,6 +35,9 @@ return function( \Slim\App $app):\Slim\App {
 
     // Route pour obtenir un patient selon un id
     $app->get('/patients/{id}', GetPatientById::class);
+
+    //Route pour ajouter un Rendez-Vous
+    $app->post('/rdv', CreerRendezVousAction::class)->add(ValidateRDVMiddleware::class);
 
     return $app;
 };

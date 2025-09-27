@@ -22,8 +22,6 @@ class ValidateRDVMiddleware
                 ->key('date_heure_debut', v::dateTime('Y-m-d H:i:s'))
                 ->key('duree', v::intType()->positive())
                 ->key('motif_visite', v::stringType()->notEmpty())
-                ->key('date_heure_fin', v::optional(v::dateTime('Y-m-d H:i:s')))
-                ->key('date_creation', v::optional(v::dateTime('Y-m-d H:i:s')))
                 ->assert($data);
         } catch (NestedValidationException $e) {
             throw new HttpBadRequestException($rq, "Invalid data: " . $e->getFullMessage(), $e);
@@ -37,7 +35,7 @@ class ValidateRDVMiddleware
         // Génération des valeurs manquantes
         $dateDebut = $data['date_heure_debut'];
         $duree     = (int) $data['duree'];
-        $dateFin   = $data['date_heure_fin'] ?? date("Y-m-d H:i:s", strtotime($dateDebut . " + {$duree} minutes"));
+        $dateFin = date("Y-m-d H:i:s", strtotime($dateDebut . " + {$duree} minutes"));
         $dateCreation = $data['date_creation'] ?? date("Y-m-d H:i:s");
 
         // Création du DTO

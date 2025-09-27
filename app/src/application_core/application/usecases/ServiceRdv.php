@@ -81,33 +81,30 @@ class ServiceRdv implements ServiceRdvInterface
     public function creerRendezVous(InputRendezVousDTO $dto): RdvDTO
     {
         $praticien = $this->servicePraticien->getPraticienDetail($dto->praticien_id);
-        if ($praticien->toArray()->id != NULL) {
+        if ($praticien->id === NULL) {
             throw new \DomainException("Praticien inexistant");
         }
         $patient = $this->servicePatient->getPatient($dto->patient_id);
-        if ($patient->toArray()->id != NULL)
+        if ($patient->id === NULL) {
+            throw new \DomainException("Patient inexistant");
+        }
 
         if (!in_array($dto->motif_visite, $praticien->motifs)) {
             throw new \DomainException("Motif non autorisé");
         }
 
         $debut = new \DateTimeImmutable($dto->date_heure_debut);
-        $fin = $debut->modify("+{$dto->duree} minutes");
-
         $jour = (int) $debut->format('N');
         $heure = (int) $debut->format('H');
         if ($jour > 5 || $heure < 8 || $heure >= 19) {
             throw new \DomainException("Créneau non valide (jour ouvré 8h–19h)");
         }
 
+        if($dto->date_creation > $dto->date_heure_debut){
+            throw new \DomainException("Rendez-vous déjà passé");
+        }
+
         $id = Uuid::uuid4()->toString();
-        $dateCreation = date('Y-m-d H:i:s');
-
-        $dateFin = date(
-            'Y-m-d H:i:s',
-            strtotime($dto->date_heure_debut . " +{$dto->duree} minutes")
-        );
-
         $rdv = new Rdv(
             id: $id,
             praticien_id: $dto->praticien_id,
@@ -115,8 +112,8 @@ class ServiceRdv implements ServiceRdvInterface
             date_heure_debut: $dto->date_heure_debut,
             status: 0,
             duree: $dto->duree,
-            date_heure_fin: $dateFin,
-            date_creation: $dateCreation,
+            date_heure_fin: $dto->date_heure_fin,
+            date_creation: $dto->date_creation,
             motif_visite: $dto->motif_visite
         );
 
