@@ -25,7 +25,7 @@ return function( \Slim\App $app):\Slim\App {
     $app->get('/praticiens/{id}', DetailPraticienAction::class);
 
     // Route pour lister les créneaux occupés d'un praticien sur une période
-    $app->get('/praticiens/{id}/rdv/occupes', ListerCreneauxOccupesAction::class);
+    $app->get('/praticiens/{id}/rdvs', ListerCreneauxOccupesAction::class);
 
     // Agenda praticien
     $app->get('/praticiens/{id}/agenda', AgendaPraticienAction::class);
