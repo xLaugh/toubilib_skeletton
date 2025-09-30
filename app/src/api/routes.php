@@ -19,7 +19,7 @@ return function( \Slim\App $app):\Slim\App {
     $app->get('/praticiens', ListePraticiensAction::class);
 
     //Route pour liser le rdv correspondant à l'id rentré
-    $app->get('/rdv/{id}', GetRdvById::class);
+    $app->get('/rdvs/{id}', GetRdvById::class);
 
     // Route pour obtenir les détails d'un praticien par son ID
     $app->get('/praticiens/{id}', DetailPraticienAction::class);
@@ -31,13 +31,13 @@ return function( \Slim\App $app):\Slim\App {
     $app->get('/praticiens/{id}/agenda', AgendaPraticienAction::class);
 
     // Annulation de rendez-vous
-    $app->post('/rdv/{id}/annuler', AnnulerRDVAction::class);
+    $app->post('/rdvs/{id}/annuler', AnnulerRDVAction::class);
 
     // Route pour obtenir un patient selon un id
     $app->get('/patients/{id}', GetPatientById::class);
 
     //Route pour ajouter un Rendez-Vous
-    $app->post('/rdv', CreerRendezVousAction::class)->add(ValidateRDVMiddleware::class);
+    $app->post('/rdvs', CreerRendezVousAction::class)->add(ValidateRDVMiddleware::class);
 
     return $app;
 };
