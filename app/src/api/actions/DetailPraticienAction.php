@@ -5,6 +5,7 @@ use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use toubilib\core\application\ports\api\ServicePraticienInterface;
 use toubilib\core\domain\exceptions\NotFoundException;
+use toubilib\core\domain\exceptions\ArgumentInvalideException;
 
 class DetailPraticienAction
 {
