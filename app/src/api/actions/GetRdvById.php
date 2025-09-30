@@ -5,6 +5,7 @@ namespace toubilib\api\actions;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use toubilib\core\application\ports\api\ServiceRdvInterface;
+use toubilib\core\domain\exceptions\NotFoundException;
 
 class GetRdvById
 {
@@ -18,6 +19,10 @@ class GetRdvById
             $id = $args['id'] ?? null;
             $rdv = $this->serviceRdv->chercherParId($id);
 
+            if($rdv === NULL){
+                throw new NotFoundException();
+            }
+
             $response->getBody()->write(json_encode([
                 'success' => true,
                 'data' => $rdv->toArray()
@@ -26,6 +31,15 @@ class GetRdvById
             return $response
                 ->withHeader('Content-Type', 'application/json')
                 ->withStatus(200);
+
+        } catch(NotFoundException $e){
+            $response->getBody()->write(json_encode([
+                'success' => false,
+                'error' => 'Rdv non trouvé'
+            ]));
+            return $response
+                ->withHeader('Content-Type', 'application/json')
+                ->withStatus(404);
 
         } catch (\Exception $e) {
             $response->getBody()->write(json_encode([
