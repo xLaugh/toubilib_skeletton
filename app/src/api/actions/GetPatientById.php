@@ -4,6 +4,7 @@ namespace toubilib\api\actions;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use toubilib\core\application\ports\api\ServicePatientInterface;
+use toubilib\core\domain\exceptions\NotFoundException;
 
 class GetPatientById
 {
@@ -18,6 +19,10 @@ class GetPatientById
             $id = $args['id'] ?? null;
             $patient = $this->servicePatient->getPatient($id);
 
+            if($patient === NULL){
+                throw new NotFoundException();
+            }
+
             $response->getBody()->write(json_encode([
                 'success' => true,
                 'data' => $patient->toArray()
@@ -26,6 +31,15 @@ class GetPatientById
             return $response
                 ->withHeader('Content-Type', 'application/json')
                 ->withStatus(200);
+
+        } catch(NotFoundException $e){
+            $response->getBody()->write(json_encode([
+                'success' => false,
+                'error' => 'Patient non trouvé',
+            ]));
+            return $response
+                ->withHeader('Content-Type','application/json')
+                ->withStatus(404);
 
         } catch (\Exception $e) {
             $response->getBody()->write(json_encode([
