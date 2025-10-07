@@ -22,12 +22,6 @@ class ServiceAuthz implements ServiceAuthzInterface
 
     public function canAccessPraticienAgenda(ProfileDTO $profile, string $praticienId): bool
     {
-        // Règles typiques:
-        // - Un praticien peut accéder à son propre agenda
-        // - Un patient peut accéder à l'agenda d'un praticien (disponibilités publiques)
-        // Ici on autorise tous les rôles connus à consulter un agenda de praticien existant.
-        // Si besoin de durcir: vérifier l'existence du praticien.
-
         $exists = $this->praticienRepository->findById($praticienId) !== null;
         if (!$exists) {
             return false;
@@ -43,9 +37,6 @@ class ServiceAuthz implements ServiceAuthzInterface
             return false;
         }
 
-        // Règles typiques:
-        // - Le patient propriétaire du RDV peut voir le détail
-        // - Le praticien propriétaire du RDV peut voir le détail
         if ($profile->role === self::ROLE_PATIENT) {
             return $rdv->getPatientId() === $profile->id;
         }
