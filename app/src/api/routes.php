@@ -12,6 +12,7 @@ use toubilib\api\actions\ListerCreneauxOccupesAction;
 use toubilib\api\actions\AgendaPraticienAction;
 use toubilib\api\actions\AnnulerRDVAction;
 use toubilib\api\middleware\ValidateRDVMiddleware;
+use toubilib\api\actions\SigninAction;
 
 return function( \Slim\App $app):\Slim\App {
 
@@ -38,6 +39,9 @@ return function( \Slim\App $app):\Slim\App {
 
     //Route pour ajouter un Rendez-Vous
     $app->post('/rdvs', CreerRendezVousAction::class)->add(ValidateRDVMiddleware::class)->setName("rdv.ajout");
+
+    // Auth
+    $app->post('/auth/signin', SigninAction::class)->setName('auth.signin');
 
     return $app;
 };
