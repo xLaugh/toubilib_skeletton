@@ -1,6 +1,7 @@
 <?php
 namespace toubilib\infra\repositories;
 
+use toubilib\core\application\ports\api\CredentialsDTO;
 use toubilib\core\application\ports\spi\repositoryInterfaces\AuthRepositoryInterface;
 use toubilib\core\domain\entities\User;
 
@@ -27,5 +28,54 @@ class PDOAuthReposiroty implements AuthRepositoryInterface
             password: $row['password'],
             role: $row['role']
         );
+    }
+
+    public function save(CredentialsDTO $dto, int $role):void {
+        $passwordhash = password_hash($dto->password, PASSWORD_BCRYPT);
+        $sql = "INSERT INTO users (email, password, role) VALUES (:email, :password, :role)";
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->bindParam(':email', $dto->email);
+        $stmt->bindParam(':password', $passwordhash);
+        $stmt->bindParam(':role', $role);
+        $stmt->execute();
+    }
+
+    public function findByEmail(string $email): ?User
+    {
+        $sql = "SELECT * FROM users WHERE email = :email";
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->bindParam(':email', $email);
+        $stmt->execute();
+
+        $row = $stmt->fetch(\PDO::FETCH_ASSOC);
+
+        if ($row) {
+            $res = new User(
+                id: $row['id'],
+                email: $row['email'],
+                password: $row['password'],
+                role: $row['role']
+            );
+        }
+        return $res;
+    }
+
+    public function findByCredentials(CredentialsDTO $credentials): ?User{
+        $passwordhash = password_hash($credentials->password, PASSWORD_BCRYPT);
+        $sql = "SELECT * FROM users WHERE email = :email AND password = :password";
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->bindParam(':email', $credentials->email);
+        $stmt->bindParam(':password',$passwordhash);
+        $stmt->execute();
+        $row = $stmt->fetch(\PDO::FETCH_ASSOC);
+        if ($row) {
+            $res = new User(
+                id: $row['id'],
+                email: $row['email'],
+                password: $row['password'],
+                role: $row['role']
+            );
+        }
+        return $res;
     }
 }
