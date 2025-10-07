@@ -2,12 +2,12 @@
 
 namespace toubilib\core\domain\entities;
 
-class Auth{
+class User{
 
     private string $id;
     private string $email;
-    private string $password; // hashed password
-    private int $role; // 0 = patient, 1 = praticien, 2 = admin
+    private string $password;
+    private int $role;
 
     public function __construct(string $id, string $email, string $password, int $role){
         $this->id = $id;
