@@ -41,7 +41,7 @@ return function( \Slim\App $app):\Slim\App {
     $app->post('/rdvs', CreerRendezVousAction::class)->add(ValidateRDVMiddleware::class)->setName("rdv.ajout");
 
     // Auth
-    $app->post('/auth/signin', SigninAction::class)->setName('auth.signin');
+    $app->post('/signin', SigninAction::class)->setName('signin');
 
     return $app;
 };
