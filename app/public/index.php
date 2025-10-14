@@ -1,9 +1,6 @@
 <?php
 declare(strict_types=1);
 
-use app\api\middleware\CorsMiddleware as CorsMiddleware;
-
-
 require_once __DIR__ . '/../vendor/autoload.php';
 
 /* application boostrap */
