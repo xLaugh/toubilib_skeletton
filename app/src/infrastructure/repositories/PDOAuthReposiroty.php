@@ -56,21 +56,4 @@ class PDOAuthReposiroty implements AuthRepositoryInterface
             role: $row['role']
         );
     }
-
-    public function findByCredentials(CredentialsDTO $credentials): ?User{
-        $passwordhash = password_hash($credentials->password, PASSWORD_BCRYPT);
-        $sql = "SELECT * FROM users WHERE email = :email AND password = :password";
-        $stmt = $this->pdo->prepare($sql);
-        $stmt->bindParam(':email', $credentials->email);
-        $stmt->bindParam(':password',$passwordhash);
-        $stmt->execute();
-        $row = $stmt->fetch(\PDO::FETCH_ASSOC);
-
-        return new User(
-            id: $row['id'],
-            email: $row['email'],
-            password: $row['password'],
-            role: $row['role']
-        );
-    }
 }

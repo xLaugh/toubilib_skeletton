@@ -30,9 +30,13 @@ class ServiceUser implements ServiceUserInterface {
     }
 
     public function byCredentials(CredentialsDTO $credentials): ?ProfileDTO{
-        $user = $this->userRepository->findByCredentials($credentials);
+        $user = $this->userRepository->findByEmail($credentials->email);
         if($user === null){
-            throw new \Exception("Login éroné");
+            throw new \Exception("Email éroné");
+        }
+
+        if(!password_verify($credentials->password, $user->getPassword())){
+            throw new \Exception("Mot de passe éroné");
         }
 
         return new ProfileDTO(
