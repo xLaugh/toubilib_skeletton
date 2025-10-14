@@ -49,15 +49,12 @@ class PDOAuthReposiroty implements AuthRepositoryInterface
 
         $row = $stmt->fetch(\PDO::FETCH_ASSOC);
 
-        if ($row) {
-            $res = new User(
-                id: $row['id'],
-                email: $row['email'],
-                password: $row['password'],
-                role: $row['role']
-            );
-        }
-        return $res;
+        return new User(
+            id: $row['id'],
+            email: $row['email'],
+            password: $row['password'],
+            role: $row['role']
+        );
     }
 
     public function findByCredentials(CredentialsDTO $credentials): ?User{
@@ -68,14 +65,12 @@ class PDOAuthReposiroty implements AuthRepositoryInterface
         $stmt->bindParam(':password',$passwordhash);
         $stmt->execute();
         $row = $stmt->fetch(\PDO::FETCH_ASSOC);
-        if ($row) {
-            $res = new User(
-                id: $row['id'],
-                email: $row['email'],
-                password: $row['password'],
-                role: $row['role']
-            );
-        }
-        return $res;
+
+        return new User(
+            id: $row['id'],
+            email: $row['email'],
+            password: $row['password'],
+            role: $row['role']
+        );
     }
 }
