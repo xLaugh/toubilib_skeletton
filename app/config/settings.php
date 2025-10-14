@@ -1,9 +1,11 @@
 <?php
 
 use Psr\Container\ContainerInterface;
+use toubilib\core\application\ports\spi\repositoryInterfaces\AuthRepositoryInterface;
 use toubilib\core\application\ports\spi\repositoryInterfaces\PatientRepositoryInterface;
 use toubilib\core\application\ports\spi\repositoryInterfaces\PraticienRepositoryInterface;
 use toubilib\core\application\ports\spi\repositoryInterfaces\RdvRepositoryInterface;
+use toubilib\infra\repositories\PDOAuthReposiroty;
 use toubilib\infra\repositories\PDOPatientRepository;
 use toubilib\infra\repositories\PDOPraticienRepository;
 use toubilib\infra\repositories\PDORdvRepository;
@@ -34,6 +36,14 @@ return [
             'user' => $_ENV['TOUBIRDV_DB_USER'] ?? 'toubipat',
             'password' => $_ENV['TOUBIRDV_DB_PASS'] ?? 'toubipat',
         ],
+        'toubiauth' => [
+            'driver' => 'pgsql',
+            'host' => $_ENV['TOUBIAUTH_DB_HOST'] ?? 'toubiauth.db',
+            'port' => $_ENV['TOUBIAUTH_DB_PORT'] ?? 5432,
+            'dbname' => $_ENV['TOUBIAUTH_DB_NAME'] ?? 'toubiauth',
+            'user' => $_ENV['TOUBIAUTH_DB_USER'] ?? 'toubiauth',
+            'password' => $_ENV['TOUBIAUTH_DB_PASS'] ?? 'toubiauth',
+        ]
     ],
 
     // Options PDO communs
@@ -70,6 +80,14 @@ return [
     return new PDO($dsn, $config['user'], $config['password'], $options);
     },
 
+    // Connexion toubiauth
+    'db.toubiauth' => function (ContainerInterface $c): PDO {
+    $config = $c->get('db')['toubiauth'];
+    $options = $c->get('pdo_options');
+    $dsn = "pgsql:host={$config['host']};port={$config['port']};dbname={$config['dbname']}";
+    return new PDO($dsn, $config['user'], $config['password'], $options);
+    },
+
     // Repository Praticien
     PraticienRepositoryInterface::class => function (ContainerInterface $c) {
     return new PDOPraticienRepository($c->get('db.toubiprat'));
@@ -83,6 +101,11 @@ return [
     // Repository Patient
     PatientRepositoryInterface::class => function (ContainerInterface $c) {
     return new PDOPatientRepository($c->get('db.toubipat'));
+    },
+
+    // Repository Auth
+    AuthRepositoryInterface::class => function (ContainerInterface $c) {
+    return new PDOAuthReposiroty($c->get('db.toubiauth'));
     },
 ];
 

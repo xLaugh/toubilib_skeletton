@@ -13,6 +13,7 @@ use toubilib\api\actions\AnnulerRDVAction;
 use toubilib\core\application\ports\api\ServicePraticienInterface;
 use toubilib\core\application\ports\api\ServiceRdvInterface;
 use toubilib\api\actions\SigninAction;
+use toubilib\core\application\ports\api\ServiceUserInterface;
 use toubilib\core\application\ports\spi\repositoryInterfaces\PraticienRepositoryInterface;
 use toubilib\core\application\ports\spi\repositoryInterfaces\RdvRepositoryInterface;
 use toubilib\core\application\usecases\ServicePraticien;

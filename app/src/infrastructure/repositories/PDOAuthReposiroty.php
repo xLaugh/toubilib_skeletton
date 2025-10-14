@@ -55,5 +55,6 @@ class PDOAuthReposiroty implements AuthRepositoryInterface
             password: $row['password'],
             role: $row['role']
         );
+
     }
 }
