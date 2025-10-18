@@ -18,6 +18,7 @@ use toubilib\core\application\ports\spi\repositoryInterfaces\PraticienRepository
 use toubilib\core\application\ports\spi\repositoryInterfaces\RdvRepositoryInterface;
 use toubilib\core\application\usecases\ServicePraticien;
 use toubilib\core\application\usecases\ServiceRdv;
+use toubilib\api\providers\AuthnProviderInterface;
 
 return [
 
@@ -88,7 +89,7 @@ return [
     // Signin
     SigninAction::class => function($c){
         return new SigninAction(
-            $c->get(ServiceUserInterface::class)
+            $c->get(AuthnProviderInterface::class)
         );
     },
 ];
