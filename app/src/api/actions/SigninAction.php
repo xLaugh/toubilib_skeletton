@@ -25,13 +25,21 @@ class SigninAction
                 throw new \Exception("Email ou mot de passe non fourni");
             }
             $credentials = new CredentialsDTO($data['email'], $data['password']);
-            $authDTO = $this->authnProvider->signin($credentials);
+            $resSignIn = $this->authnProvider->signin($credentials);
+
+            $authDTO = $resSignIn[0];
+            $profile = $resSignIn[1];
             $payload = [
                 'access_token'  => $authDTO->accesToken,
                 'refresh_token' => $authDTO->refreshToken,
             ];
 
-            $response->getBody()->write(json_encode($payload, JSON_PRETTY_PRINT));
+            $res = [
+                'payload' => $payload,
+                'profile' => $profile
+            ];
+
+            $response->getBody()->write(json_encode($res, JSON_PRETTY_PRINT));
 
             return $response
                 ->withHeader('Content-Type', 'application/json')

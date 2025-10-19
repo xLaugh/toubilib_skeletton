@@ -17,7 +17,7 @@ class JWTAuthnProvider implements AuthnProviderInterface{
         $this->serviceUser = $serviceUser;
     }
 
-    public function signin(CredentialsDTO $credentials): AuthDTO
+    public function signin(CredentialsDTO $credentials): array
     {
         $user = $this->serviceUser->byCredentials($credentials);
         $payload = [
@@ -33,6 +33,6 @@ class JWTAuthnProvider implements AuthnProviderInterface{
         $accessToken  = $this->JWTManager->createAccesToken($payload);
         $refreshToken = $this->JWTManager->createRefreshToken($payload);
 
-        return new AuthDTO($accessToken, $refreshToken);
+        return [new AuthDTO($accessToken, $refreshToken), new ProfileDTO($user->id,$user->email,$user->role)];
     }
 }
