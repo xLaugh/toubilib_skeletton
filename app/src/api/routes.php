@@ -11,6 +11,8 @@ use toubilib\api\actions\ListePraticiensAction;
 use toubilib\api\actions\ListerCreneauxOccupesAction;
 use toubilib\api\actions\AgendaPraticienAction;
 use toubilib\api\actions\AnnulerRDVAction;
+use toubilib\api\middleware\AuthMiddleware;
+use toubilib\api\middleware\AuthzMiddleware;
 use toubilib\api\middleware\ValidateRDVMiddleware;
 use toubilib\api\actions\SigninAction;
 
@@ -20,7 +22,7 @@ return function( \Slim\App $app):\Slim\App {
     $app->get('/praticiens', ListePraticiensAction::class)->setName("praticiens.all");
 
     //Route pour liser le rdv correspondant à l'id rentré
-    $app->get('/rdvs/{id}', GetRdvById::class)->setName("rdvs.id");
+    $app->get('/rdvs/{id}', GetRdvById::class)->setName("rdvs.id")->add(AuthzMiddleware::class)->add(AuthMiddleware::class);
 
     // Route pour obtenir les détails d'un praticien par son ID
     $app->get('/praticiens/{id}', DetailPraticienAction::class)->setName("praticien.id");

@@ -1,6 +1,8 @@
 <?php
 
 use DI\Container;
+use toubilib\api\middleware\AuthMiddleware;
+use toubilib\api\middleware\AuthzMiddleware;
 use toubilib\api\providers\AuthnProviderInterface;
 use toubilib\api\providers\JWTAuthnProvider;
 use toubilib\api\providers\JWTManager;
@@ -51,5 +53,19 @@ return [
         $JWTmanager = $container->get(JWTManager::class);
         $serviceUser = $container->get(ServiceUserInterface::class);
         return new JWTAuthnProvider($JWTmanager,$serviceUser);
+    },
+    ServiceAuthz::class => function (Container $container) {
+        $rdvRepo = $container->get(RdvRepositoryInterface::class);
+        $praticienRepo = $container->get(PraticienRepositoryInterface::class);
+        return new ServiceAuthz($rdvRepo, $praticienRepo);
+    },
+
+    AuthzMiddleware::class => function (Container $container) {
+        $authzService = $container->get(ServiceAuthz::class);
+        return new AuthzMiddleware($authzService);
+    },
+    AuthMiddleware::class => function ($container) {
+        $secretKey = $_ENV['JWT_SECRET'];
+        return new AuthMiddleware($secretKey);
     },
 ];
