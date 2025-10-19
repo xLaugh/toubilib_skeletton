@@ -22,18 +22,6 @@ use toubilib\api\providers\AuthnProviderInterface;
 
 return [
 
-    // Service métier pour les praticiens
-    ServicePraticienInterface::class => function ($c) {
-        $repo = $c->get(PraticienRepositoryInterface::class);
-        return new ServicePraticien($repo);
-    },
-
-    // Service métier pour les rendez-vous
-    ServiceRdvInterface::class => function ($c) {
-        $repo = $c->get(RdvRepositoryInterface::class);
-        return new ServiceRdv($repo);
-    },
-
     // Liste des praticiens
     ListePraticiensAction::class => function ($c) {
         return new ListePraticiensAction(
