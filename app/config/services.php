@@ -68,4 +68,5 @@ return [
         $secretKey = $_ENV['JWT_SECRET'];
         return new AuthMiddleware($secretKey);
     },
+
 ];

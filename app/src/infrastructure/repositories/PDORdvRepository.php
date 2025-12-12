@@ -136,4 +136,24 @@ class PDORdvRepository implements RdvRepositoryInterface
         $stmt->bindValue(':id', $id);
         $stmt->execute();
     }
+
+    public function findConsultationsByPatientId(string $patientId): array
+    {
+        $stmt = $this->pdo->prepare("
+            SELECT r.id, r.date, r.heure, r.statut,
+                p.id AS praticien_id, p.nom, p.prenom,
+                m.libelle AS motif
+            FROM rdv r
+            JOIN praticien p ON r.praticien_id = p.id
+            JOIN motif_visite m ON r.motif_id = m.id
+            WHERE r.patient_id = :patient_id
+            AND r.date < CURRENT_DATE
+            ORDER BY r.date DESC
+        ");
+
+        $stmt->execute(['patient_id' => $patientId]);
+
+        return $stmt->fetchAll(\PDO::FETCH_ASSOC);
+    }
+
 }

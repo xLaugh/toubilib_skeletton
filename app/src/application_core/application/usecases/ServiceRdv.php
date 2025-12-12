@@ -167,6 +167,11 @@ class ServiceRdv implements ServiceRdvInterface
         }, $rdvs);
     }
 
+    public function getHistoriquePatient(string $patientId): array
+    {
+        return $this->rdvRepository->findConsultationsByPatientId($patientId);
+    }
+
     public function honorerRendezVous(string $id): RdvDTO
     {
         $rdv = $this->rdvRepository->findById($id);
