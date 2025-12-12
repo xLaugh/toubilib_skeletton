@@ -47,6 +47,11 @@ class ServiceAuthz implements ServiceAuthzInterface
 
         return false;
     }
+
+    public function canAccessPatientConsultations(ProfileDTO $profile, string $patientId): bool {
+        return $profile->role === self::ROLE_PATIENT && $profile->id === $patientId;
+    }
+
 }
 
 

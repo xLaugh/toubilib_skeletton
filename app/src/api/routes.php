@@ -15,6 +15,7 @@ use toubilib\api\middleware\AuthMiddleware;
 use toubilib\api\middleware\AuthzMiddleware;
 use toubilib\api\middleware\ValidateRDVMiddleware;
 use toubilib\api\actions\SigninAction;
+use toubilib\api\actions\HistoriquePatientAction;
 
 return function( \Slim\App $app):\Slim\App {
 
@@ -44,6 +45,10 @@ return function( \Slim\App $app):\Slim\App {
 
     // Auth
     $app->post('/signin', SigninAction::class)->setName('signin');
+
+    // Route pour récupérer l'historique des consultations d'un patient
+    $app->get('/patients/{id}/consultations',HistoriquePatientAction::class)->setName('patients.consultations')->add(AuthzMiddleware::class)->add(AuthMiddleware::class);;
+
 
     return $app;
 };

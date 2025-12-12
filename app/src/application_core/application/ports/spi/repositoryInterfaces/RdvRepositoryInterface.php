@@ -24,4 +24,5 @@ interface RdvRepositoryInterface {
     public function findByPraticienAndPeriod(string $praticienId, string $dateDebut, string $dateFin): array;
     public function save(Rdv $rdv): void;
     public function updateStatus(string $id, int $status): void; //Rendez-vous annulé
+    public function findConsultationsByPatientId(string $patientId): array;
 }

@@ -47,7 +47,10 @@ class AuthzMiddleware
                     $rdvId = $route->getArgument('id');
                     $isAllowed = $this->authzService->canAccessRdvDetail($profile, $rdvId);
                     break;
-
+                case 'patients.consultations':
+                    $patientId = $route->getArgument('id');
+                    $isAllowed = $this->authzService->canAccessPatientConsultations($profile, $patientId);
+                    break;
                 default:
                     throw new \Exception("Aucune règle d’autorisation définie pour cette route", 403);
             }
