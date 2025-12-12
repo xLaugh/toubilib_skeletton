@@ -5,9 +5,11 @@ use toubilib\api\actions\CreerRendezVousAction;
 use toubilib\api\actions\DetailPraticienAction;
 use toubilib\api\actions\GetPatientById;
 use toubilib\api\actions\GetRdvById;
+use toubilib\api\actions\HonorerRDVAction;
 use toubilib\api\actions\ListePraticiensAction;
 use toubilib\api\actions\ListerCreneauxOccupesAction;
 use toubilib\api\actions\AgendaPraticienAction;
+use toubilib\api\actions\NonHonorerRDVAction;
 use toubilib\core\application\ports\api\ServicePatientInterface;
 use toubilib\api\actions\AnnulerRDVAction;
 use toubilib\core\application\ports\api\ServicePraticienInterface;
@@ -58,6 +60,18 @@ return [
     // Annuler un RDV
     AnnulerRDVAction::class => function ($c) {
         return new AnnulerRDVAction(
+            $c->get(ServiceRdvInterface::class)
+        );
+    },
+    // Change le statut du RDV à honorer
+    HonorerRDVAction::class => function ($c) {
+        return new HonorerRDVAction(
+            $c->get(ServiceRdvInterface::class)
+        );
+    },
+    // Change le statut du RDV à non honorer
+    NonHonorerRDVAction::class => function ($c) {
+        return new NonHonorerRDVAction(
             $c->get(ServiceRdvInterface::class)
         );
     },

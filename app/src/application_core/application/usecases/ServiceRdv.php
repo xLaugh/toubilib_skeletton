@@ -166,4 +166,46 @@ class ServiceRdv implements ServiceRdvInterface
             );
         }, $rdvs);
     }
+
+    public function honorerRendezVous(string $id): RdvDTO
+    {
+        $rdv = $this->rdvRepository->findById($id);
+        if ($rdv === null) {
+            throw new \DomainException('rdv introuvable');
+        }
+        $rdv->honorer();
+        $this->rdvRepository->updateStatus($rdv->getId(), $rdv->getStatus());
+        return new RdvDTO(
+            id: $rdv->getId(),
+            praticien_id: $rdv->getPraticienId(),
+            patient_id: $rdv->getPatientId(),
+            date_heure_debut: $rdv->getDateHeureDebut(),
+            status: $rdv->getStatus(),
+            duree: $rdv->getDuree(),
+            date_heure_fin: $rdv->getDateHeureFin(),
+            date_creation: $rdv->getDateCreation(),
+            motif_visite: $rdv->getMotifVisite()
+        );
+    }
+
+    public function nonHonorerRendezVous(string $id): RdvDTO
+    {
+        $rdv = $this->rdvRepository->findById($id);
+        if ($rdv === null) {
+            throw new \DomainException('rdv introuvable');
+        }
+        $rdv->nonHonorer();
+        $this->rdvRepository->updateStatus($rdv->getId(), $rdv->getStatus());
+        return new RdvDTO(
+            id: $rdv->getId(),
+            praticien_id: $rdv->getPraticienId(),
+            patient_id: $rdv->getPatientId(),
+            date_heure_debut: $rdv->getDateHeureDebut(),
+            status: $rdv->getStatus(),
+            duree: $rdv->getDuree(),
+            date_heure_fin: $rdv->getDateHeureFin(),
+            date_creation: $rdv->getDateCreation(),
+            motif_visite: $rdv->getMotifVisite()
+        );
+    }
 }

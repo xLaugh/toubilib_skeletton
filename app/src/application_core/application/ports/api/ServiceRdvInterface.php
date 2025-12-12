@@ -16,4 +16,6 @@ interface ServiceRdvInterface {
     public function creerRendezVous(InputRendezVousDTO $dto): RdvDTO;
     public function agendaPraticien(string $praticienId, ?string $dateDebut = null, ?string $dateFin = null): array;
     public function annulerRendezVous(string $id): RdvDTO;
+    public function honorerRendezVous(string $id): RdvDTO;
+    public function nonHonorerRendezVous(string $id): RdvDTO;
 }

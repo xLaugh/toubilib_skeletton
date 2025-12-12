@@ -6,7 +6,7 @@ use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use toubilib\core\application\ports\api\ServiceRdvInterface;
 
-class AnnulerRDVAction
+class NonHonorerRDVAction
 {
     public function __construct(
         private ServiceRdvInterface $serviceRdv
@@ -16,7 +16,7 @@ class AnnulerRDVAction
     {
         try {
             $id = $args['id'] ?? '';
-            $rdv = $this->serviceRdv->annulerRendezVous($id);
+            $rdv = $this->serviceRdv->nonHonorerRendezVous($id);
             $response->getBody()->write(json_encode([
                 'success' => true,
                 'data' => $rdv->toArray()

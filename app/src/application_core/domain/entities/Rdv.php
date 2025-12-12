@@ -5,6 +5,8 @@ class Rdv{
 
     public const STATUS_PREVU = 0;
     public const STATUS_ANNULE = 2;
+    public const STATUS_HONORE = 1;
+    public const STATUS_NON_HONORE = 3;
 
     private string $id;
     private string $praticien_id;
@@ -87,14 +89,39 @@ class Rdv{
     public function annuler(): void
     {
         if ($this->status === self::STATUS_ANNULE) {
-            throw new \RuntimeException('rdv_deja_annule');
+            throw new \RuntimeException('rdv deja annulé');
         }
         $now = new \DateTimeImmutable('now');
         $start = new \DateTimeImmutable($this->date_heure_debut);
         if ($start <= $now) {
-            throw new \RuntimeException('rdv_non_annulable');
+            throw new \RuntimeException('rdv non annulable, car le rdv a déjà commencer');
         }
         $this->status = self::STATUS_ANNULE;
+    }
+    public function honorer(): void
+    {
+        if ($this->status === self::STATUS_ANNULE) {
+            throw new \RuntimeException('rdv déjà annulé');
+        }/*
+        $now = new \DateTimeImmutable('now');
+        $start = new \DateTimeImmutable($this->date_heure_debut);
+        if ($start >= $now) {
+            throw new \RuntimeException('rdv non honorable, car le rdv n"a pas encore commencer');
+        }*/
+        $this->status = self::STATUS_HONORE;
+    }
+
+    public function nonHonorer(): void
+    {
+        if ($this->status === self::STATUS_ANNULE) {
+            throw new \RuntimeException('rdv déjà annulé');
+        }/*
+        $now = new \DateTimeImmutable('now');
+        $start = new \DateTimeImmutable($this->date_heure_debut);
+        if ($start >= $now) {
+            throw new \RuntimeException('rdv non honorable, car le rdv n"a pas encore commencer');
+        }*/
+        $this->status = self::STATUS_NON_HONORE;
     }
 
 }
