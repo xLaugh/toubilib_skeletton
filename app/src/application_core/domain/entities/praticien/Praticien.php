@@ -86,4 +86,23 @@ class Praticien
     {
         return $this->specialiteLibelle;
     }
+
+    public function toArray(): array
+    {
+        return [
+            'id' => $this->id->toString(),
+            'nom' => $this->nom,
+            'prenom' => $this->prenom,
+            'ville' => $this->ville,
+            'email' => $this->email,
+            'telephone' => $this->telephone,
+            'specialiteId' => $this->specialiteId,
+            'specialiteLibelle' => $this->specialiteLibelle,
+            'structureId' => $this->structureId?->toString(),
+            'rppsId' => $this->rppsId,
+            'organisation' => $this->organisation,
+            'nouveauPatient' => $this->nouveauPatient,
+            'titre' => $this->titre,
+        ];
+    }
 }

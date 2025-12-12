@@ -19,4 +19,13 @@ interface ServicePraticienInterface
      */
     public function getPraticienDetail(string $id): ?PraticienDetailDTO;
 
+    /**
+     * Retourne la liste des praticien selon la specialite ou la ville
+     *
+     * @param int|null $specialite
+     * @param string|null $ville
+     * @return array
+     */
+    public function rechercherPraticiens(?int $specialite, ?string $ville): array;
+
 }

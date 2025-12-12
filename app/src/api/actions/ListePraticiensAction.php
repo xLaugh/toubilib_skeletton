@@ -15,7 +15,16 @@ class ListePraticiensAction
     public function __invoke(Request $request, Response $response): Response
     {
         try {
-            $praticiens = $this->servicePraticien->listerPraticiens();
+            $params = $request->getQueryParams();
+
+            $specialite = $params['specialite'] ?? null;
+            $ville = $params['ville'] ?? null;
+
+            if ($specialite !== null || $ville !== null) {
+                $praticiens = $this->servicePraticien->rechercherPraticiens($specialite, $ville);
+            } else {
+                $praticiens = $this->servicePraticien->listerPraticiens();
+            }
             
             $data = array_map(function ($praticien) {
                 return $praticien->toArray();

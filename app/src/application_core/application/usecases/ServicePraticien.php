@@ -37,4 +37,9 @@ class ServicePraticien implements ServicePraticienInterface
         return $this->praticienRepository->findDetailById($id);
     }
 
+    public function rechercherPraticiens(?int $specialite, ?string $ville): array
+    {
+        return $this->praticienRepository->findByParam($specialite, $ville);
+    }
+
 }

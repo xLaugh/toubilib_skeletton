@@ -162,4 +162,71 @@ class PDOPraticienRepository implements PraticienRepositoryInterface
         );
     }
 
+    public function findByParam(?int $specialite, ?string $ville): array
+    {
+        if ($specialite === null && $ville === null) {
+            return $this->findAll();
+        }
+
+        if ($specialite === null && $ville !== null) {
+            $sql = "
+            SELECT p.*, s.libelle AS specialite_libelle
+            FROM praticien p
+            LEFT JOIN specialite s ON p.specialite_id = s.id
+            WHERE p.ville = :ville
+        ";
+
+            $stmt = $this->pdo->prepare($sql);
+            $stmt->execute(['ville' => $ville]);
+        }
+
+        elseif ($specialite !== null && $ville === null) {
+            $sql = "
+            SELECT p.*, s.libelle AS specialite_libelle
+            FROM praticien p
+            LEFT JOIN specialite s ON p.specialite_id = s.id
+            WHERE p.specialite_id = :specialite
+        ";
+
+            $stmt = $this->pdo->prepare($sql);
+            $stmt->execute(['specialite' => $specialite]);
+        }
+
+        else {
+            $sql = "
+            SELECT p.*, s.libelle AS specialite_libelle
+            FROM praticien p
+            LEFT JOIN specialite s ON p.specialite_id = s.id
+            WHERE p.specialite_id = :specialite
+              AND p.ville = :ville
+        ";
+
+            $stmt = $this->pdo->prepare($sql);
+            $stmt->execute([
+                'specialite' => $specialite,
+                'ville' => $ville
+            ]);
+        }
+
+        $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        return array_map(function($row) {
+            return new Praticien(
+                id: Uuid::fromString($row['id']),
+                nom: $row['nom'],
+                prenom: $row['prenom'],
+                ville: $row['ville'],
+                email: $row['email'],
+                telephone: $row['telephone'],
+                specialiteId: (int) $row['specialite_id'],
+                specialiteLibelle: $row['specialite_libelle'] ?? 'Non spécifiée',
+                structureId: $row['structure_id'] ? Uuid::fromString($row['structure_id']) : null,
+                rppsId: $row['rpps_id'],
+                organisation: (bool) $row['organisation'],
+                nouveauPatient: (bool) $row['nouveau_patient'],
+                titre: $row['titre']
+            );
+        }, $rows);
+    }
+
 }

@@ -30,4 +30,13 @@ interface PraticienRepositoryInterface
      */
     public function findDetailById(string $id): PraticienDetailDTO;
 
+    /**
+     * Retourne la liste des praticien selon leur spécilité et la ville
+     *
+     * @param int|null $specialite
+     * @param string|null $ville
+     * @return array
+     */
+    public function findByParam(?int $specialite, ?string $ville): array;
+
 }
