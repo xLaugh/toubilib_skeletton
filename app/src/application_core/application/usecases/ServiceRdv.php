@@ -8,6 +8,7 @@ use toubilib\core\application\ports\api\RdvDTO;
 use toubilib\core\application\ports\api\ServicePatientInterface;
 use toubilib\core\application\ports\api\ServicePraticienInterface;
 use toubilib\core\application\ports\api\ServiceRdvInterface;
+use toubilib\core\application\ports\api\ServiceIndisponibiliteInterface;
 use toubilib\core\application\ports\api\RdvSlotDTO;
 use toubilib\core\domain\entities\Rdv as RdvEntity;
 use toubilib\core\application\ports\spi\repositoryInterfaces\PraticienRepositoryInterface;
@@ -19,12 +20,14 @@ class ServiceRdv implements ServiceRdvInterface
     private RdvRepositoryInterface $rdvRepository;
     private ServicePraticienInterface $servicePraticien;
     private ServicePatientInterface $servicePatient;
+    private ServiceIndisponibiliteInterface $serviceIndisponibilite;
 
-    public function __construct(RdvRepositoryInterface $rdvRepository, ServicePatientInterface $servicePatient, ServicePraticienInterface $servicePraticien)
+    public function __construct(RdvRepositoryInterface $rdvRepository, ServicePatientInterface $servicePatient, ServicePraticienInterface $servicePraticien, ServiceIndisponibiliteInterface $serviceIndisponibilite)
     {
         $this->rdvRepository = $rdvRepository;
         $this->servicePatient = $servicePatient;
         $this->servicePraticien = $servicePraticien;
+        $this->serviceIndisponibilite = $serviceIndisponibilite;
     }
 
     public function listerRdv(): array
@@ -102,6 +105,11 @@ class ServiceRdv implements ServiceRdvInterface
 
         if($dto->date_creation > $dto->date_heure_debut){
             throw new \DomainException("Rendez-vous déjà passé");
+        }
+
+        $finRdv = new \DateTimeImmutable($dto->date_heure_fin);
+        if ($this->serviceIndisponibilite->verifierIndisponibilite($dto->praticien_id, $debut, $finRdv)) {
+            throw new \DomainException("Le praticien est indisponible sur cette période");
         }
 
         $id = Uuid::uuid4()->toString();

@@ -14,6 +14,8 @@ interface ServiceAuthzInterface
      * Vérifie si le profil peut accéder au détail d'un rendez-vous donné.
      */
     public function canAccessRdvDetail(ProfileDTO $profile, string $rdvId): bool;
+
+    public function canManageIndisponibilite(ProfileDTO $profile, string $praticienId): bool;
 }
 
 
