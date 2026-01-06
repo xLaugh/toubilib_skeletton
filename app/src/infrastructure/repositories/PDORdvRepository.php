@@ -140,15 +140,14 @@ class PDORdvRepository implements RdvRepositoryInterface
     public function findConsultationsByPatientId(string $patientId): array
     {
         $stmt = $this->pdo->prepare("
-            SELECT r.id, r.date, r.heure, r.statut,
+            SELECT r.id, r.date_heure_debut, r.statut,
                 p.id AS praticien_id, p.nom, p.prenom,
-                m.libelle AS motif
+                r.motif_visite
             FROM rdv r
-            JOIN praticien p ON r.praticien_id = p.id
-            JOIN motif_visite m ON r.motif_id = m.id
+            JOIN patient p ON r.patient_id = p.id
             WHERE r.patient_id = :patient_id
-            AND r.date < CURRENT_DATE
-            ORDER BY r.date DESC
+            AND r.date_heure_debut < CURRENT_DATE
+            ORDER BY r.date_heure_debut DESC
         ");
 
         $stmt->execute(['patient_id' => $patientId]);

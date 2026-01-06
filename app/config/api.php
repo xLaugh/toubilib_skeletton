@@ -5,6 +5,7 @@ use toubilib\api\actions\CreerRendezVousAction;
 use toubilib\api\actions\DetailPraticienAction;
 use toubilib\api\actions\GetPatientById;
 use toubilib\api\actions\GetRdvById;
+use toubilib\api\actions\HistoriquePatientAction;
 use toubilib\api\actions\HonorerRDVAction;
 use toubilib\api\actions\ListePraticiensAction;
 use toubilib\api\actions\ListerCreneauxOccupesAction;
@@ -94,4 +95,9 @@ return [
             $c->get(AuthnProviderInterface::class)
         );
     },
+    HistoriquePatientAction::class => function($c){
+        return new HistoriquePatientAction(
+            $c->get(ServiceRdvInterface::class)
+        );
+    }
 ];
